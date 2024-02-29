@@ -39,5 +39,6 @@ docker-compose exec -it php composer install
 ### Se connecter dans le terminal MySQL
 
 ```bash
-docker-compose exec -it mysql mysql
+docker-compose exec -it mysql mysql -p 
+password : root_password
 ```
