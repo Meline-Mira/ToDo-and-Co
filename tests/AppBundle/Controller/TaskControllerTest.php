@@ -2,7 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Entity\Task;
+use App\Entity\Task;
 use DateTimeImmutable;
 
 class TaskControllerTest extends ControllerTestCase
@@ -12,7 +12,7 @@ class TaskControllerTest extends ControllerTestCase
         $this->loginAs('test', 'password');
 
         $crawler = $this->client()->request('GET', '/tasks');
-        $this->assertContains('Créer une tâche', $crawler->filter('a.btn-info')->text());
+        $this->assertStringContainsString('Créer une tâche', $crawler->filter('a.btn-info')->text());
     }
 
     public function testCreateAction()
@@ -23,7 +23,7 @@ class TaskControllerTest extends ControllerTestCase
         $this->loginAs('test', 'password');
 
         $crawler = $this->client()->request('GET', '/tasks/create');
-        $this->assertContains('Title', $crawler->filter('label')->text());
+        $this->assertStringContainsString('Title', $crawler->filter('label')->text());
 
         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
 
@@ -34,8 +34,8 @@ class TaskControllerTest extends ControllerTestCase
 
         $crawler = $this->client()->submit($form);
 
-        $this->assertContains('Superbe ! La tâche a été bien été ajoutée.', $crawler->filter('div.alert-success')->text());
-        $this->assertContains('Tâche à faire', $crawler->html());
+        $this->assertStringContainsString('Superbe ! La tâche a été bien été ajoutée.', $crawler->filter('div.alert-success')->text());
+        $this->assertStringContainsString('Tâche à faire', $crawler->html());
     }
 
     public function testEditAction()
@@ -54,8 +54,8 @@ class TaskControllerTest extends ControllerTestCase
         $em->flush();
 
         $crawler = $this->client()->request('GET', '/tasks/'.$task->getId().'/edit');
-        $this->assertContains('Title', $crawler->filter('label')->text());
-        $this->assertContains('Description à modifier', $crawler->filter('textarea')->text());
+        $this->assertStringContainsString('Title', $crawler->filter('label')->text());
+        $this->assertStringContainsString('Description à modifier', $crawler->filter('textarea')->text());
 
         $buttonCrawlerNode = $crawler->selectButton('Modifier');
 
@@ -66,8 +66,8 @@ class TaskControllerTest extends ControllerTestCase
 
         $crawler = $this->client()->submit($form);
 
-        $this->assertContains('Superbe ! La tâche a bien été modifiée.', $crawler->filter('div.alert-success')->text());
-        $this->assertContains('Tâche modifiée', $crawler->html());
+        $this->assertStringContainsString('Superbe ! La tâche a bien été modifiée.', $crawler->filter('div.alert-success')->text());
+        $this->assertStringContainsString('Tâche modifiée', $crawler->html());
     }
 
     public function testToggleTaskAction()
@@ -86,10 +86,10 @@ class TaskControllerTest extends ControllerTestCase
         $em->flush();
 
         $crawler = $this->client()->request('GET', '/tasks/'.$task->getId().'/toggle');
-        $this->assertContains('Marquer non terminée', $crawler->filter('button')->text());
+        $this->assertStringContainsString('Marquer non terminée', $crawler->filter('button')->text());
 
         $crawler = $this->client()->request('GET', '/tasks/'.$task->getId().'/toggle');
-        $this->assertContains('Marquer comme faite', $crawler->filter('button')->text());
+        $this->assertStringContainsString('Marquer comme faite', $crawler->filter('button')->text());
     }
 
     public function testDeleteTaskAction()
@@ -108,6 +108,6 @@ class TaskControllerTest extends ControllerTestCase
         $em->flush();
 
         $crawler = $this->client()->request('GET', '/tasks/'.$task->getId().'/delete');
-        $this->assertContains('Superbe ! La tâche a bien été supprimée.', $crawler->filter('div.alert-success')->text());
+        $this->assertStringContainsString('Superbe ! La tâche a bien été supprimée.', $crawler->filter('div.alert-success')->text());
     }
 }

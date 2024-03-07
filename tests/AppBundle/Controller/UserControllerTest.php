@@ -2,7 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 
 class UserControllerTest extends ControllerTestCase
 {
@@ -11,7 +11,7 @@ class UserControllerTest extends ControllerTestCase
         $this->loginAs('test', 'password');
 
         $crawler = $this->client()->request('GET', '/users');
-        $this->assertContains('Créer un utilisateur', $crawler->filter('a.btn-primary')->text());
+        $this->assertStringContainsString('Créer un utilisateur', $crawler->filter('a.btn-primary')->text());
     }
 
     public function testCreateAction()
@@ -22,7 +22,7 @@ class UserControllerTest extends ControllerTestCase
         $this->loginAs('test', 'password');
 
         $crawler = $this->client()->request('GET', '/users/create');
-        $this->assertContains('Nom d\'utilisateur', $crawler->filter('label')->text());
+        $this->assertStringContainsString('Nom d\'utilisateur', $crawler->filter('label')->text());
 
         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
 
@@ -35,8 +35,8 @@ class UserControllerTest extends ControllerTestCase
 
         $crawler = $this->client()->submit($form);
 
-        $this->assertContains('Superbe ! L\'utilisateur a bien été ajouté.', $crawler->filter('div.alert-success')->text());
-        $this->assertContains('Liste des utilisateurs', $crawler->html());
+        $this->assertStringContainsString('Superbe ! L\'utilisateur a bien été ajouté.', $crawler->filter('div.alert-success')->text());
+        $this->assertStringContainsString('Liste des utilisateurs', $crawler->html());
     }
 
     public function testEditAction()
@@ -55,21 +55,21 @@ class UserControllerTest extends ControllerTestCase
         $em->flush();
 
         $crawler = $this->client()->request('GET', '/users/'.$user->getId().'/edit');
-        $this->assertContains('Nom d\'utilisateur', $crawler->filter('label')->text());
-        $this->assertContains('Utilisateur à modifier', $crawler->filter('input#user_username')->attr('value'));
+        $this->assertStringContainsString('Nom d\'utilisateur', $crawler->filter('label')->text());
+        $this->assertStringContainsString('Utilisateur à modifier', $crawler->filter('input#user_username')->attr('value'));
 
         $buttonCrawlerNode = $crawler->selectButton('Modifier');
 
         $form = $buttonCrawlerNode->form([
             'user[username]' => 'Utilisateur modifié',
-            'user[password][first]' => '$2y$13$Tx.3gKHSdcmxaTUuC.NO/uXsPIMcr7npAi.KLogalYwZ5o/x81LEi', // password hashed
-            'user[password][second]' => '$2y$13$Tx.3gKHSdcmxaTUuC.NO/uXsPIMcr7npAi.KLogalYwZ5o/x81LEi', // password hashed
-            'user[email]'    => 'utilisateurmodifié@example.com',
+            'user[password][first]' => 'password',
+            'user[password][second]' => 'password',
+            'user[email]'    => 'utilisateurmodifie@example.com',
         ]);
 
         $crawler = $this->client()->submit($form);
 
-        $this->assertContains('Superbe ! L\'utilisateur a bien été modifié', $crawler->filter('div.alert-success')->text());
-        $this->assertContains('Utilisateur modifié', $crawler->html());
+        $this->assertStringContainsString('Superbe ! L\'utilisateur a bien été modifié', $crawler->filter('div.alert-success')->text());
+        $this->assertStringContainsString('Utilisateur modifié', $crawler->html());
     }
 }

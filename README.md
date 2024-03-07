@@ -27,13 +27,19 @@ docker-compose logs
 ### Se connecter en bash dans le conteneur PHP
 
 ```bash
-docker-compose exec -it php bash
+docker-compose exec --user $(id -u):$(id -g) -it php bash
+```
+
+### Lancer les tests dans le conteneur PHP
+
+```bash
+docker-compose exec --user $(id -u):$(id -g) -it php ./vendor/bin/simple-phpunit
 ```
 
 ### Lancer l'installation des vendors via Composer
 
 ```bash
-docker-compose exec -it php composer install
+docker-compose exec --user $(id -u):$(id -g) -it php composer install
 ```
 
 ### Se connecter dans le terminal MySQL

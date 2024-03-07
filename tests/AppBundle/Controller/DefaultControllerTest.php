@@ -11,6 +11,6 @@ class DefaultControllerTest extends ControllerTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Nom d\'utilisateur :', $crawler->filter('label')->text());
+        $this->assertStringContainsString('Nom d\'utilisateur :', $crawler->filter('label')->text());
     }
 }
