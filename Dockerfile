@@ -8,4 +8,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 WORKDIR /app
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "web"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
