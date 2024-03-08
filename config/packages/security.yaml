@@ -1,6 +1,6 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    encoders:
+    password_hashers:
         App\Entity\User: bcrypt
 
     providers:
@@ -15,7 +15,6 @@ security:
             security: false
 
         main:
-            anonymous: ~
             pattern: ^/
             form_login:
                 login_path: login
