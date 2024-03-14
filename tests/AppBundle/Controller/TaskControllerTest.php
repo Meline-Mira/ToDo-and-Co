@@ -36,6 +36,7 @@ class TaskControllerTest extends ControllerTestCase
 
         $this->assertStringContainsString('Superbe ! La tâche a été bien été ajoutée.', $crawler->filter('div.alert-success')->text());
         $this->assertStringContainsString('Tâche à faire', $crawler->html());
+        $this->assertStringContainsString('test', $crawler->html());
     }
 
     public function testEditAction()

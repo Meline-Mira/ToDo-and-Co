@@ -29,6 +29,9 @@ class Task
     #[ORM\Column(type: Types::BOOLEAN)]
     private $isDone;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?User $author = null;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
@@ -78,5 +81,17 @@ class Task
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
     }
 }
