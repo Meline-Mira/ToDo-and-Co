@@ -6,6 +6,7 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -73,11 +74,18 @@ class TaskController extends AbstractController
     #[Route("/tasks/{id}/delete", name: "task_delete")]
     public function deleteTaskAction(Task $task, EntityManagerInterface $entityManager)
     {
-        $entityManager->remove($task);
-        $entityManager->flush();
+        if ($task->getAuthor() === $this->getUser() || $task->getAuthor() === null && $this->isGranted('ROLE_ADMIN')) {
+            $entityManager->remove($task);
+            $entityManager->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list');
+        } else {
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer cette tâche.');
+
+            return $this->redirectToRoute('task_list');
+        }
+
     }
 }

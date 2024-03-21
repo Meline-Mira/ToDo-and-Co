@@ -17,7 +17,7 @@ class UserControllerTest extends ControllerTestCase
     public function testCreateAction()
     {
         // Supprimer les éventuels utilisateurs de la base de données
-        $this->client()->getContainer()->get('database_connection')->executeQuery("DELETE FROM user WHERE email != 'test@example.com'");
+        $this->client()->getContainer()->get('database_connection')->executeQuery("DELETE FROM user WHERE email != 'test@example.com' AND email != 'author@example.com'");
 
         $this->loginAs('test', 'password');
 
@@ -42,7 +42,7 @@ class UserControllerTest extends ControllerTestCase
     public function testEditAction()
     {
         // Supprimer les éventuelles tâches de la base de données
-        $this->client()->getContainer()->get('database_connection')->executeQuery("DELETE FROM user WHERE email != 'test@example.com'");
+        $this->client()->getContainer()->get('database_connection')->executeQuery("DELETE FROM user WHERE email != 'test@example.com' AND email != 'author@example.com'");
 
         $this->loginAs('test', 'password');
 

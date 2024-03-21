@@ -3,7 +3,9 @@
 namespace Tests\AppBundle\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TaskControllerTest extends ControllerTestCase
 {
@@ -110,5 +112,26 @@ class TaskControllerTest extends ControllerTestCase
 
         $crawler = $this->client()->request('GET', '/tasks/'.$task->getId().'/delete');
         $this->assertStringContainsString('Superbe ! La tâche a bien été supprimée.', $crawler->filter('div.alert-success')->text());
+    }
+
+    public function testDeleteTaskActionNotWorkForBadUser()
+    {
+        // Supprimer les éventuelles tâches de la base de données
+        $this->client()->getContainer()->get('database_connection')->executeQuery('DELETE FROM task');
+        $em = $this->client()->getContainer()->get('doctrine.orm.entity_manager');
+        $author = $em->getRepository(User::class)->findOneByUsername('author');
+
+        $this->loginAs('test', 'password');
+
+        $task = new Task();
+        $task->setTitle('Tâche à faire');
+        $task->setContent('Description de la tâche');
+        $task->setCreatedAt(new DateTimeImmutable('22-02-2024'));
+        $task->setAuthor($em->getReference(User::class, $author->getId()));
+        $em->persist($task);
+        $em->flush();
+
+        $crawler = $this->client()->request('GET', '/tasks/'.$task->getId().'/delete');
+        $this->assertStringContainsString('Oops ! Vous ne pouvez pas supprimer cette tâche.', $crawler->filter('div.alert-danger')->text());
     }
 }
