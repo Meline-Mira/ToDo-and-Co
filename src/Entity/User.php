@@ -16,6 +16,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity("email")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    final public const ROLES = [
+        'Utilisateur' => 'ROLE_USER',
+        'Admin' => 'ROLE_ADMIN'
+    ];
+
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Task::class)]
     private Collection $tasks;
+
+    #[ORM\Column(type: 'json', options: ['default' => '[]'])]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -88,7 +96,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRolesAsString(): string
+    {
+        $roles = array_flip(self::ROLES);
+
+        return implode(', ', array_map(function ($role) use ($roles) {
+            return $roles[$role];
+        }, $this->roles));
     }
 
     public function eraseCredentials(): void
